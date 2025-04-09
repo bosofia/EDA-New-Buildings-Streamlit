@@ -11,7 +11,16 @@ st.set_page_config(layout="wide")
 @st.cache_data
 def load_data():
     # Load the dataset
-    dpe_data = pd.read_csv("data\dpe-v2-logements-neufs.csv")
+    def concat_data():
+    """
+    Concatenate all the csv files to create a single dataframe.
+    """
+    dfs = []
+    for i in range(1, 9):
+        df = pd.read_csv(f"data/dpe-v2-logements-neufs-{i}.csv")
+        dfs.append(df)
+    return pd.concat(dfs, ignore_index=True)
+    dpe_data = concat_data()
     # Convert date columns to datetime format
     dpe_data["Date_établissement_DPE"] = pd.to_datetime(dpe_data["Date_établissement_DPE"], errors="coerce")
     return dpe_data
